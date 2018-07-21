@@ -36,7 +36,7 @@ for submission in subreddit.hot(limit=50):
 		for comment in submission.comments.list():
 			body = comment.body.encode('utf-8')
 			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
-				if not re.search("alisson", body, re.IGNORECASE):
+				if not re.search("alisson|richalison", body, re.IGNORECASE):
 					# Reply to the comment
 					print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 					comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
@@ -51,7 +51,7 @@ for submission in subreddit.hot(limit=50):
 		if not found_comment:
 			title = submission.title.encode('utf-8')
 			if re.search("(allison|allisson|alison)", title, re.IGNORECASE):
-				if not re.search("alisson", title, re.IGNORECASE):
+				if not re.search("alisson|richalison", title, re.IGNORECASE):
 					# Reply to the comment
 					print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
 					submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
