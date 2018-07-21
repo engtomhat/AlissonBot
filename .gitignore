@@ -1,3 +1,9 @@
+# Reddit Credentials and Setup
+praw.ini
+
+# Backups
+bk/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
