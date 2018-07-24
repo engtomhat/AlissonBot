@@ -4,7 +4,8 @@ import re
 import os
 
 # Some authors get a pass
-allowed_authors = ['l46yd']
+allowed_author_ids = ['l46yd']
+allowed_authors = ['SirMrJames']
 # Create the Reddit instance
 reddit = praw.Reddit('AlissonBot')
 
@@ -37,9 +38,20 @@ for submission in subreddit.hot(limit=50):
 		found_comment = False
 		for comment in submission.comments.list():
 			# Skip comments from some authors
-			if comment.author.id in allowed_authors:
-				continue
+			author = comment.author
+			author_id_found = False
+			try:
+				if author.id in allowed_author_ids:
+					continue
+				author_id_found = True
+			except prawcore.exceptions.NotFound:
+				print('Author of comment %(comment)s in submission %(submission)s is invisible' %{'comment':comment.id, 'submission':submission.id})
+			if not author_id_found:
+				if author in allowed_authors:
+					continue
+			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
+			# Search comments for wrong spelling
 			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
 				if not re.search("alisson|richalison", body, re.IGNORECASE):
 					# Reply to the comment
