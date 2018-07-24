@@ -3,6 +3,8 @@ import praw
 import re
 import os
 
+# Some authors get a pass
+allowed_authors = ['l46yd']
 # Create the Reddit instance
 reddit = praw.Reddit('AlissonBot')
 
@@ -34,6 +36,9 @@ for submission in subreddit.hot(limit=50):
 		submission.comments.replace_more(limit=0)
 		found_comment = False
 		for comment in submission.comments.list():
+			# Skip comments from some authors
+			if comment.author.id in allowed_authors:
+				continue
 			body = comment.body.encode('utf-8')
 			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
 				if not re.search("alisson|richalison", body, re.IGNORECASE):
