@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import praw
+import prawcore
 import re
 import os
 
