@@ -43,6 +43,10 @@ for submission in subreddit.hot(limit=50):
 		submission.comments.replace_more(limit=0)
 		found_comment = False
 		for comment in submission.comments.list():
+			# Skip deleted comments
+			if comment.body is "[deleted]":
+				my_print('Skipping DELETED comment: submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
+				continue
 			# Skip comments from some authors
 			author = comment.author
 			author_id_found = False
