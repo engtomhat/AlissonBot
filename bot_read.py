@@ -40,16 +40,19 @@ for submission in subreddit.hot(limit=50):
 		for comment in submission.comments.list():
 			# Skip comments from some authors
 			author = comment.author
-			author_id_found = False
-			try:
-				if author.id in allowed_author_ids:
-					continue
-				author_id_found = True
-			except prawcore.exceptions.NotFound:
-				print('Author of comment %(comment)s in submission %(submission)s is invisible' %{'comment':comment.id, 'submission':submission.id})
-			if not author_id_found:
-				if author in allowed_authors:
-					continue
+			if author is not None:
+				author_id_found = False
+				try:
+					if author.id in allowed_author_ids:
+						continue
+					author_id_found = True
+				except prawcore.exceptions.NotFound:
+					print('Author %(author)s of comment %(comment)s in submission %(submission)s has no ID' %{'author':author,'comment':comment.id, 'submission':submission.id})
+				if not author_id_found:
+					if author in allowed_authors:
+						continue
+			else:
+				print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
 			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
 			# Search comments for wrong spelling
