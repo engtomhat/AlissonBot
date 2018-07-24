@@ -40,7 +40,9 @@ for submission in subreddit.hot(limit=50):
 		for comment in submission.comments.list():
 			# Skip comments from some authors
 			author = comment.author
-			if author is not None:
+			if author is None:
+				print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
+			else:
 				author_id_found = False
 				try:
 					if author.id in allowed_author_ids:
@@ -51,8 +53,6 @@ for submission in subreddit.hot(limit=50):
 				if not author_id_found:
 					if author in allowed_authors:
 						continue
-			else:
-				print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
 			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
 			# Search comments for wrong spelling
