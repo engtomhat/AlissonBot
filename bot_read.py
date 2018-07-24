@@ -3,6 +3,11 @@ import praw
 import prawcore
 import re
 import os
+import sys
+
+def my_print(*messages):
+	print(*messages)
+	sys.stdout.flush()
 
 # Some authors get a pass
 allowed_author_ids = ['l46yd']
@@ -46,9 +51,9 @@ for submission in subreddit.hot(limit=50):
 					continue
 				author_id_found = True
 			except prawcore.exceptions.NotFound:
-				print('Author %(author)s of comment %(comment)s in submission %(submission)s has no ID' %{'author':author,'comment':comment.id, 'submission':submission.id})
+				my_print('Author %(author)s of comment %(comment)s in submission %(submission)s has no ID' %{'author':author,'comment':comment.id, 'submission':submission.id})
 			except AttributeError:
-				print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
+				my_print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
 			if not author_id_found:
 				if author in allowed_authors:
 					continue
@@ -58,7 +63,7 @@ for submission in subreddit.hot(limit=50):
 			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
 				if not re.search("alisson|richalison", body, re.IGNORECASE):
 					# Reply to the comment
-					print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
+					my_print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 					comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
 					found_comment = True
 					# Store the current post into our list
@@ -66,21 +71,21 @@ for submission in subreddit.hot(limit=50):
 					comments_replied_to.append(comment.id)
 					break
 				else:
-					print('Skipping submission %(submission)s, comment %(comment)s. Found both the right & wrong spelling' % {'submission' : submission.id, 'comment' : comment.id})
+					my_print('Skipping submission %(submission)s, comment %(comment)s. Found both the right & wrong spelling' % {'submission' : submission.id, 'comment' : comment.id})
 		# Search title instead if no comments including misspelling
 		if not found_comment:
 			title = submission.title.encode('utf-8')
 			if re.search("(allison|allisson|alison)", title, re.IGNORECASE):
 				if not re.search("alisson|richalison", title, re.IGNORECASE):
 					# Reply to the comment
-					print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
+					my_print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
 					submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
 					# Store the current post into our list
 					posts_replied_to.append(submission.id)
 				else:
-					print('Skipping submission %(submission)s. Found both the right & wrong spelling' % {'submission' : submission.id})
+					my_print('Skipping submission %(submission)s. Found both the right & wrong spelling' % {'submission' : submission.id})
 	else:
-		print('Skipping submission %(submission)s' % {'submission' : submission.id})
+		my_print('Skipping submission %(submission)s' % {'submission' : submission.id})
 
 
 # Write our updated list back to the file
