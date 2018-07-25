@@ -50,7 +50,7 @@ for submission in subreddit.hot(limit=50):
 			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
 			# Search comments for wrong spelling
-			my_print('SEARCHING submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
+			# my_print('SEARCHING submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
 				if not re.search("alisson|richalison", body, re.IGNORECASE):
 					# Reply to the comment
