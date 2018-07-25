@@ -44,7 +44,7 @@ for submission in subreddit.hot(limit=50):
 		found_comment = False
 		for comment in submission.comments.list():
 			# Skip comments from some authors
-			if author in allowed_authors:
+			if comment.author in allowed_authors:
 				my_print('Skipping. Allowed author. Submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 				continue
 			# Read comment as UTF-8
