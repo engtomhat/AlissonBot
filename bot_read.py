@@ -5,8 +5,8 @@ import re
 import os
 import sys
 
-def my_print(*messages):
-	print(*messages)
+def my_print(messages):
+	print(messages)
 	sys.stdout.flush()
 
 # Some authors get a pass
@@ -43,24 +43,10 @@ for submission in subreddit.hot(limit=50):
 		submission.comments.replace_more(limit=0)
 		found_comment = False
 		for comment in submission.comments.list():
-			# Skip deleted comments
-			if comment.body is "[deleted]":
-				my_print('Skipping DELETED comment: submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
-				continue
 			# Skip comments from some authors
-			author = comment.author
-			author_id_found = False
-			try:
-				if author.id in allowed_author_ids:
-					continue
-				author_id_found = True
-			except prawcore.exceptions.NotFound:
-				my_print('Author %(author)s of comment %(comment)s in submission %(submission)s has no ID' %{'author':author,'comment':comment.id, 'submission':submission.id})
-			except AttributeError:
-				my_print('Author of comment %(comment)s in submission %(submission)s returns NoneType' %{'comment':comment.id, 'submission':submission.id})
-			if not author_id_found:
-				if author in allowed_authors:
-					continue
+			if author in allowed_authors:
+				my_print('Skipping. Allowed author. Submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
+				continue
 			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
 			# Search comments for wrong spelling
