@@ -4,38 +4,31 @@ import prawcore
 import re
 import os
 import sys
+from file_operations import read_file_into_list, write_list_into_file
 
+# Use this print to instantly print to console
 def my_print(messages):
 	print(messages)
 	sys.stdout.flush()
 
-# Some authors get a pass
-allowed_author_ids = ['l46yd']
+# Variables
+misspelt_pattern = "(allison|allisson|alison)"
+allowed_pattern = "(alisson|richalison)"
 allowed_authors = ['SirMrJames']
-# Create the Reddit instance
-reddit = praw.Reddit('AlissonBot')
+#allowed_author_ids = ['l46yd']
 
 # Control flags
 reply_to_multiple_comments_in_thread = False
 
-# Have we run this code before? If not, create an empty list
-if not os.path.isfile("posts_replied_to.txt"):
-	posts_replied_to = []
-if not os.path.isfile("comments_replied_to.txt"):
-	comments_replied_to = []
+# Read posts and comments that were written before
+posts_file = "posts_replied_to.txt"
+comments_file = "comments_replied_to.txt"
+posts_replied_to = read_file_into_list(posts_file)
+comments_replied_to = read_file_into_list(comments_file)
 
-# If we have run the code before, load the list of posts we have replied to
-else:
-	# Read the file into a list and remove any empty values
-	with open("posts_replied_to.txt", "r") as f:
-		posts_replied_to = f.read()
-		posts_replied_to = posts_replied_to.split("\n")
-		posts_replied_to = list(filter(None, posts_replied_to))
-	with open("comments_replied_to.txt", "r") as g:
-		comments_replied_to = g.read()
-		comments_replied_to = comments_replied_to.split("\n")
-		comments_replied_to = list(filter(None, comments_replied_to))
-
+# Create the Reddit instance
+reddit = praw.Reddit('AlissonBot')
+# Connect to required subreddit
 subreddit = reddit.subreddit("LiverpoolFC")
 for submission in subreddit.hot(limit=50):
 	# If we haven't replied to this post before
@@ -51,8 +44,8 @@ for submission in subreddit.hot(limit=50):
 			body = comment.body.encode('utf-8')
 			# Search comments for wrong spelling
 			# my_print('SEARCHING submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
-			if re.search("(allison|allisson|alison)", body, re.IGNORECASE):
-				if not re.search("alisson|richalison", body, re.IGNORECASE):
+			if re.search(misspelt_pattern, body, re.IGNORECASE):
+				if not re.search(allowed_pattern, body, re.IGNORECASE):
 					# Reply to the comment
 					my_print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 					comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
@@ -66,9 +59,9 @@ for submission in subreddit.hot(limit=50):
 		# Search title instead if no comments including misspelling
 		if not found_comment:
 			title = submission.title.encode('utf-8')
-			if re.search("(allison|allisson|alison)", title, re.IGNORECASE):
-				if not re.search("alisson|richalison", title, re.IGNORECASE):
-					# Reply to the comment
+			if re.search(misspelt_pattern, title, re.IGNORECASE):
+				if not re.search(allowed_pattern, title, re.IGNORECASE):
+					# Reply to the submission
 					my_print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
 					submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
 					# Store the current post into our list
@@ -80,9 +73,5 @@ for submission in subreddit.hot(limit=50):
 
 
 # Write our updated list back to the file
-with open("posts_replied_to.txt", "w") as f:
-	for post_id in posts_replied_to:
-		f.write(post_id + "\n")
-with open("comments_replied_to.txt", "w") as g:
-	for comment_id in comments_replied_to:
-		g.write(comment_id + "\n")
+write_list_into_file(posts_replied_to, posts_file)
+write_list_into_file(comments_replied_to, comments_file)
