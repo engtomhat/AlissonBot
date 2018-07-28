@@ -9,9 +9,9 @@ def read_file_into_list(file_name):
 	else:
 		# Read the file into list and remove any empty values
 		with open(file_name, "r") as f:
-		values = f.read()
-		values = values.split("\n")
-		values = list(filter(None, values))
+			values = f.read()
+			values = values.split("\n")
+			values = list(filter(None, values))
 	return values
 
 # Write a list into a file
