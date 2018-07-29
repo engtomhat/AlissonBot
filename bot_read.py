@@ -11,6 +11,17 @@ def my_print(messages):
 	print(messages)
 	sys.stdout.flush()
 
+# Search for pattern in text. Return '1' if found, '2' if correct & wrong spelling found, '0' if not found
+def is_pattern_found(body_text):
+	pattern_found = 0
+	# Search text body for wrong spelling
+	if re.search(misspelt_pattern, body_text, re.IGNORECASE):
+		if not re.search(allowed_pattern, body_text, re.IGNORECASE):
+			pattern_found = 1
+		else:
+			pattern_found = 2
+	return pattern_found
+
 # Variables
 misspelt_pattern = "(allison|allisson|alison)"
 allowed_pattern = "(alisson|richalison)"
@@ -42,32 +53,32 @@ for submission in subreddit.hot(limit=50):
 				continue
 			# Read comment as UTF-8
 			body = comment.body.encode('utf-8')
-			# Search comments for wrong spelling
-			# my_print('SEARCHING submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
-			if re.search(misspelt_pattern, body, re.IGNORECASE):
-				if not re.search(allowed_pattern, body, re.IGNORECASE):
-					# Reply to the comment
-					my_print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
-					comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
-					found_comment = True
-					# Store the current post into our list
-					posts_replied_to.append(submission.id)
-					comments_replied_to.append(comment.id)
-					break
-				else:
-					my_print('Skipping submission %(submission)s, comment %(comment)s. Found both the right & wrong spelling' % {'submission' : submission.id, 'comment' : comment.id})
+			# Search comment
+			search_result = is_pattern_found(body)
+			if search_result == 1:
+				# Reply to the comment
+				my_print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
+				comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
+				found_comment = True
+				# Store the current post into our list
+				posts_replied_to.append(submission.id)
+				comments_replied_to.append(comment.id)
+				break
+			elif search_result == 2:
+				my_print('Skipping submission %(submission)s, comment %(comment)s. Found both the right & wrong spelling' % {'submission' : submission.id, 'comment' : comment.id})
 		# Search title instead if no comments including misspelling
 		if not found_comment:
 			title = submission.title.encode('utf-8')
-			if re.search(misspelt_pattern, title, re.IGNORECASE):
-				if not re.search(allowed_pattern, title, re.IGNORECASE):
-					# Reply to the submission
-					my_print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
-					submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
-					# Store the current post into our list
-					posts_replied_to.append(submission.id)
-				else:
-					my_print('Skipping submission %(submission)s. Found both the right & wrong spelling' % {'submission' : submission.id})
+			# Search title
+			search_result = is_pattern_found(title)
+			if search_result == 1:
+				# Reply to the submission
+				my_print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
+				submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
+				# Store the current post into our list
+				posts_replied_to.append(submission.id)
+			elif search_result == 2:
+				my_print('Skipping submission %(submission)s. Found both the right & wrong spelling' % {'submission' : submission.id})
 	else:
 		my_print('Skipping submission %(submission)s' % {'submission' : submission.id})
 
