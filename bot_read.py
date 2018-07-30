@@ -24,7 +24,7 @@ def is_wrong_spelling_found(body_text):
 
 # Variables
 misspelt_pattern = "(allison|allisson|alison)"
-allowed_pattern = "(alisson|richalison)"
+allowed_pattern = "(alisson)"
 bot_message = 'The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)'
 
 # Whitelisted authors
