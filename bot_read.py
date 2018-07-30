@@ -25,8 +25,10 @@ def is_pattern_found(body_text):
 # Variables
 misspelt_pattern = "(allison|allisson|alison)"
 allowed_pattern = "(alisson|richalison)"
-allowed_authors = ['SirMrJames']
-#allowed_author_ids = ['l46yd']
+bot_message = 'The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)'
+
+# Whitelisted authors
+allowed_authors = read_file_into_list("whitelisted_authors.txt")
 
 # Control flags
 reply_to_multiple_comments_in_thread = False
@@ -51,14 +53,12 @@ for submission in subreddit.hot(limit=50):
 			if comment.author in allowed_authors:
 				my_print('Skipping. Allowed author. Submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
 				continue
-			# Read comment as UTF-8
-			body = comment.body.encode('utf-8')
 			# Search comment
-			search_result = is_pattern_found(body)
+			search_result = is_pattern_found(comment.body.encode('utf-8'))
 			if search_result == 1:
 				# Reply to the comment
 				my_print('Replying to submission %(submission)s, comment %(comment)s' % {'submission' : submission.id, 'comment' : comment.id})
-				comment.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
+				comment.reply(bot_message)
 				found_comment = True
 				# Store the current post into our list
 				posts_replied_to.append(submission.id)
@@ -66,15 +66,13 @@ for submission in subreddit.hot(limit=50):
 				break
 			elif search_result == 2:
 				my_print('Skipping submission %(submission)s, comment %(comment)s. Found both the right & wrong spelling' % {'submission' : submission.id, 'comment' : comment.id})
-		# Search title instead if no comments including misspelling
 		if not found_comment:
-			title = submission.title.encode('utf-8')
-			# Search title
-			search_result = is_pattern_found(title)
+			# Search title instead if no comments including misspelling
+			search_result = is_pattern_found(submission.title.encode('utf-8'))
 			if search_result == 1:
 				# Reply to the submission
 				my_print('Replying to submission %(submission)s. Title has misspelling' % {'submission' : submission.id})
-				submission.reply('The correct spelling is ***Alisson***\n\n^(I am a bot. To reduce spam, corrections will be limited to one per thread)')
+				submission.reply(bot_message)
 				# Store the current post into our list
 				posts_replied_to.append(submission.id)
 			elif search_result == 2:
