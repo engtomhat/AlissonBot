@@ -5,7 +5,9 @@ I use [PRAW](https://praw.readthedocs.io/en/latest/index.html) to connect to Red
 
 **NOTE: I am ignoring my praw.ini file but you would need to [define a praw.ini](https://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html) file containing your reddit bot's info.**
 
-- It's limited to the top 50 threads (sorted by Hot).
+###### How the bot works
+- It's limited to the top 50 threads (sorted by Hot). This is configurable by changing the limit value in the following line
+  _`for submission in subreddit.hot(limit=50):`_
 - The patterns searched for are allison, alison and allisson.
 - If the pattern is found, another verification is done to make sure that the correct spelling doesn't also exist in the same comment.
   If the following patterns are also found (Richalison, Alisson), the comment will be ignored.
