@@ -7,8 +7,8 @@ I use [PRAW](https://praw.readthedocs.io/en/latest/index.html) to connect to Red
 
 ###### How the bot works
 - It's limited to the top 50 threads (sorted by Hot). This is configurable by changing the limit value in the following line
-  `for submission in subreddit.hot(limit=50):`
-- The patterns searched for are allison, alison and allisson. Configurable by modifying `misspelt_pattern` variable.
+  `for submission in subreddit.hot(limit=50):` in _bot_read.py_ file
+- The patterns searched for are allison, alison and allisson. Configurable by modifying `misspelt_pattern` variable in _bot_read.py_ file
 - If the pattern is found, another verification is done to make sure that the correct spelling doesn't also exist in the same comment.
   If the correct spelling (Alisson) is also found, the comment will be ignored.
 - If a thread doesn't have any misspelt comments, the title will be also searched in the same way.
