@@ -1,5 +1,5 @@
 # AlissonBot
-A bot that searches through Reddit threads in /r/LiverpoolFC and corrects wrong spellings of Alisson.
+A bot that searches through Reddit threads in [/r/LiverpoolFC](https://reddit.com/r/LiverpoolFC/) and corrects wrong spellings of Alisson.
 
 I use [PRAW](https://praw.readthedocs.io/en/latest/index.html) to connect to Reddit API.
 
