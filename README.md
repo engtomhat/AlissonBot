@@ -5,7 +5,7 @@ I use [PRAW](https://praw.readthedocs.io/en/latest/index.html) to connect to Red
 
 **NOTE: I am ignoring my praw.ini file but you would need to [define a praw.ini](https://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html) file containing your reddit bot's info.**
 
-###### How the bot works
+### How the bot works
 - It's limited to the top 50 threads (sorted by Hot). This is configurable by changing the limit value in the following line
   `for submission in subreddit.hot(limit=50):` in _bot_read.py_ file
 - The patterns searched for are allison, alison and allisson. Configurable by modifying `misspelt_pattern` variable in _bot_read.py_ file
